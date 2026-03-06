@@ -1,0 +1,21 @@
+project:
+  name: Heritage_workshop
+  task: heritage_vlm
+  seed: 42
+
+data:
+  root_dir: data/raw
+  processed_dir: data/processed
+  metadata_dir: metadata
+  dataset_name: replace_me
+  split: test
+
+model:
+  name: replace_me
+  type: vlm
+  device: cuda
+
+experiment:
+  name: baseline_run
+  output_dir: results/baseline_run
+  save_predictions: true
