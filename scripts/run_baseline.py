@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
+from pathlib import Path
+import sys
 from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from src.dataset_registry import get_dataset_info
 from src.utils import ensure_dir, save_json, set_seed
@@ -23,7 +29,7 @@ def main():
         "task": dataset.task,
         "model": model_name,
         "status": "scaffold_only",
-        "next_action": "Replace this script with real inference/evaluation once dataset is finalized."
+        "next_action": "Replace this script with real inference and evaluation once dataset is finalized."
     }
 
     save_json(result, out_dir / "summary.json")

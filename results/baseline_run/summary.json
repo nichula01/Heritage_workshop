@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-03-06T12:51:11.083933",
+  "project": "Heritage_workshop",
+  "run_name": "baseline_run",
+  "dataset": "ArtPedia",
+  "task": "vision-language / artwork understanding",
+  "model": "placeholder_vlm_baseline",
+  "status": "scaffold_only",
+  "next_action": "Replace this script with real inference and evaluation once dataset is finalized."
+}
