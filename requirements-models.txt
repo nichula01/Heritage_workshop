@@ -1,0 +1,4 @@
+accelerate
+qwen-vl-utils
+sentencepiece
+einops

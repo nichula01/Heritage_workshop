@@ -1,0 +1,19 @@
+name: heritage_minicpm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pillow=10.1.0
+  - sentencepiece=0.1.99
+  - requests
+  - pandas
+  - scikit-learn
+  - numpy
+  - pyyaml
+  - pip:
+      - torch==2.1.2
+      - torchvision==0.16.2
+      - transformers==4.40.0
+      - accelerate
+      - decord
