@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.aer.minicpm_vlm import MiniCPMVLM
+from src.aer.internvl_vlm import InternVLVLM
 
 CSV_PATH = Path("data/processed/viscounth/viscounth_en_image_manifest_small_downloaded.csv")
 
@@ -22,7 +22,7 @@ def main():
             if len(rows) == 3:
                 break
 
-    model = MiniCPMVLM("openbmb/MiniCPM-V-2_6")
+    model = InternVLVLM("OpenGVLab/InternVL2_5-2B")
 
     for row in rows:
         print("\n" + "=" * 100)

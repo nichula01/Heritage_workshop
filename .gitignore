@@ -1,20 +1,100 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
-env/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Data
-data/
-outputs/
-checkpoints/
-
-# OS
+# -------------------------
+# OS / editor
+# -------------------------
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# -------------------------
+# Environments
+# -------------------------
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+ENV/
+
+# -------------------------
+# Jupyter
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# Dataset / raw / processed data
+# Keep README files only
+# -------------------------
+data/*
+!data/README.md
+!data/.gitkeep
+
+# -------------------------
+# Outputs / experiment results
+# Keep README files only
+# -------------------------
+outputs/
+results/*
+!results/README.md
+!results/.gitkeep
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# Model weights / checkpoints
+# -------------------------
+VLM/
+checkpoints/
+weights/
+models/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+
+# -------------------------
+# Large archives
+# -------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# -------------------------
+# Sensitive files
+# -------------------------
+*.pem
+*.key
+*.secret
+secrets/
+credentials.json
+token.json
+
+# -------------------------
+# Paper PDFs / generated figures
+# -------------------------
+*.pdf
+figures/generated/

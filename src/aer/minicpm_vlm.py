@@ -10,15 +10,13 @@ class MiniCPMVLM:
         self.model_name = model_name
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        dtype = torch.bfloat16 if self.device == "cuda" else torch.float32
+        dtype = torch.bfloat16 if self.device == "cuda" else torch.float16
 
         self.model = AutoModel.from_pretrained(
             model_name,
             trust_remote_code=True,
-            attn_implementation="sdpa",
             torch_dtype=dtype
-        )
-        self.model = self.model.eval().to(self.device)
+        ).eval().to(self.device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
