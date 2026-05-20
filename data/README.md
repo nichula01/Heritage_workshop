@@ -1,10 +1,13 @@
-# Data Folder
+# Data Directory
 
-Store dataset-related information here.
+This directory is reserved for local dataset files. Do not commit raw data, processed CSV/JSONL files, downloaded images, archives, or cached artifacts.
 
-## Structure
-- `raw/` raw downloaded or linked dataset assets
-- `processed/` processed annotations, splits, metadata
+Expected local folders:
 
-## Note
-Do not commit large raw datasets to GitHub.
+- `raw/viscounth_repo/`: manually downloaded VISCOUNTH source files.
+- `raw/viscounth_extracted/`: extracted English training and description files.
+- `raw/viscounth_images_small/`: optional small image subset.
+- `raw/viscounth_images_eval300/`: optional eval-subset images.
+- `processed/viscounth/`: generated CSV/JSONL files and stats.
+
+See `docs/dataset_setup.md` for the full workflow.

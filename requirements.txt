@@ -1,1 +1,7 @@
+matplotlib
+numpy
+pandas
+pillow
 pyyaml
+requests
+scikit-learn

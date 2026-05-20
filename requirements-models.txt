@@ -1,4 +1,7 @@
 accelerate
+einops
 qwen-vl-utils
 sentencepiece
-einops
+torch
+torchvision
+transformers

@@ -1,28 +1,17 @@
-# Research Roadmap
+# Roadmap
 
-## Workshop target
-CVPR workshop style heritage paper
+## Release Readiness
 
-## Working direction
-Use a vision-language model for cultural heritage understanding with direct benchmark datasets.
+1. Keep the repository lightweight and reproducible.
+2. Finalize dataset setup documentation.
+3. Finalize AER and AER-TextFirst experiment commands.
+4. Add CPU-only tests for deterministic logic.
+5. Add paper citation metadata once the manuscript is public.
+6. Finalize the repository license.
 
-## Immediate milestones
-1. Select one focused task
-2. Select datasets
-3. Prepare repo structure and experiment scaffold
-4. Run a simple baseline
-5. Define novelty
-6. Prepare figures
-7. Draft paper sections
+## Research Follow-Ups
 
-## Candidate task directions
-- VQA for cultural heritage images
-- caption-based retrieval or matching
-- explanation/grounding for heritage question answering
-- robustness or adaptation analysis for heritage domains
-
-## This week priority
-- finalize problem statement
-- finalize datasets
-- build first loader + metadata inspection
-- prepare paper outline
+- Add a method overview figure under `docs/assets/`.
+- Add exact model revisions and hardware notes for reproduced experiments.
+- Convert draft result summaries into a reproducible table with commands and seeds.
+- Expand ablation notes for route policy, extraction, retrieval, and normalization.

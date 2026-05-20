@@ -43,6 +43,14 @@ ENV/
 data/*
 !data/README.md
 !data/.gitkeep
+data/**/*.csv
+data/**/*.json
+data/**/*.jsonl
+data/**/*.pkl
+data/**/*.jpg
+data/**/*.jpeg
+data/**/*.png
+data/**/*.webp
 
 # -------------------------
 # Outputs / experiment results
@@ -52,6 +60,14 @@ outputs/
 results/*
 !results/README.md
 !results/.gitkeep
+results/**/*.csv
+results/**/*.json
+results/**/*.jsonl
+results/**/*.png
+results/**/*.jpg
+results/**/*.jpeg
+results/**/*.pdf
+results/**/predictions*
 
 # -------------------------
 # Logs
