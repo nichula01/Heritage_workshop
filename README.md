@@ -166,16 +166,74 @@ All paths above are relative to the repository root. Generated outputs under `da
 
 ## Results
 
-The repository does not track generated predictions or result tables. Use the template below when reporting reproduced runs:
+We report paper-level draft experiments on the English-only VISCOUNTH evaluation subset of 298 samples. The evaluation uses two short-answer metrics, both reported as percentages:
 
-| Method | Eval subset | Exact match | Contains match | Notes |
-|---|---:|---:|---:|---|
-| Image-only | TODO | TODO | TODO | Reproduce locally |
-| Text-only | TODO | TODO | TODO | Reproduce locally |
-| Naive multimodal | TODO | TODO | TODO | Reproduce locally |
-| AER / AER-TextFirst | TODO | TODO | TODO | Reproduce locally |
+- **Exact Match (EM)**: prediction exactly matches the normalized gold answer.
+- **Contains**: relaxed match where the gold answer is contained in the prediction or vice versa.
 
-If draft experiment numbers are added later, label them clearly as draft results and include the exact model version, subset construction, and seed.
+### Main comparison
+
+| Method | EM ↑ | Contains ↑ |
+|---|---:|---:|
+| Image-only baseline | 8.72 | 10.07 |
+| Text-only baseline | 37.25 | 45.97 |
+| Naive multimodal baseline | 13.09 | 22.15 |
+| Adaptive Evidence Routing | 38.26 | 51.34 |
+| **AER-TextFirst** | **44.97** | **53.69** |
+
+Brief interpretation:
+AER-TextFirst gives the strongest overall performance. The text-only baseline is much stronger than the image-only baseline, showing that cultural heritage VQA often depends heavily on metadata and descriptions. However, naive image+full-description prompting performs poorly, showing that simply adding more context can distract the model. AER improves performance by routing each question to the evidence source it actually needs.
+
+### Performance by question type
+
+| Method | Visual EM ↑ | Contextual EM ↑ | Mixed EM ↑ |
+|---|---:|---:|---:|
+| Image-only baseline | 20.0 | 1.0 | 5.1 |
+| Text-only baseline | 50.0 | 38.4 | 23.2 |
+| Naive multimodal | 23.0 | 6.1 | 10.1 |
+| AER | 50.0 | 34.3 | 30.3 |
+| **AER-TextFirst** | **54.0** | **41.4** | **39.4** |
+
+Brief interpretation:
+The largest improvement appears on mixed questions, where AER-TextFirst reaches 39.4% EM compared with 10.1% for naive multimodal prompting. This supports the central hypothesis that cultural heritage questions require question-conditioned evidence selection rather than a fixed evidence strategy.
+
+### Ablation study
+
+| Variant | EM ↑ | Contains ↑ |
+|---|---:|---:|
+| **AER-TextFirst** | **44.97** | **53.69** |
+| w/o extractor | 38.93 | 47.99 |
+| w/o normalization | 42.47 | 52.65 |
+| w/o template policy, global text-first | 44.63 | 53.69 |
+| route-based fallback policy | 29.19 | 35.91 |
+| retrieved-only extraction | 40.94 | 51.34 |
+| full-description-only extraction | 44.30 | 53.36 |
+| w/o SHAPE image-only override | 43.62 | 51.68 |
+
+Brief interpretation:
+The template-aware extractor is the most important component. Removing it drops EM from 44.97% to 38.93%. The text-first design is also important: a route-based fallback policy performs much worse, suggesting that answer extraction should be attempted before expensive or noisy VLM inference.
+
+### Template-wise gains
+
+| Template | Naive Multimodal EM ↑ | Routed + Retrieval EM ↑ |
+|---|---:|---:|
+| AFFIXEDAUTHOR | 25.0 | 100.0 |
+| AUTHOR | 25.0 | 75.0 |
+| DATING | 25.0 | 75.0 |
+| AFFIXEDLANGUAGE | 37.5 | 75.0 |
+| AFFIXEDTRANSCRIPT | 12.5 | 75.0 |
+| AFFIXEDELEMENT | 0.0 | 62.5 |
+| AFFIXEDTECHNIQUE | 0.0 | 62.5 |
+| SUBJECT | 14.3 | 57.1 |
+
+Brief interpretation:
+AER is especially effective for structured metadata-heavy templates such as author, language, transcript, dating, and technique questions. These gains come mainly from retrieving focused textual evidence and applying template-aware answer extraction.
+
+### Key takeaway
+
+The results show that cultural heritage VQA is not only a multimodal reasoning problem, but also an evidence-selection problem. A fixed image-only, text-only, or naive multimodal strategy is suboptimal because different questions require different evidence sources. AER-TextFirst improves robustness by combining targeted text retrieval, template-aware extraction, policy-guided VLM fallback, and answer normalization.
+
+> These numbers are from draft paper experiments and should be reproduced locally before being treated as final benchmark results.
 
 ## Method Overview
 
