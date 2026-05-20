@@ -114,3 +114,8 @@ token.json
 # -------------------------
 *.pdf
 figures/generated/
+!docs/assets/
+!docs/assets/*.png
+!docs/assets/*.jpg
+!docs/assets/*.jpeg
+!docs/assets/*.svg

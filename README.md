@@ -8,15 +8,19 @@
 
 This repository contains research code for **Adaptive Evidence Routing (AER)** for cultural heritage visual question answering. The project studies how to answer VISCOUNTH-style questions using the evidence source each question actually needs: the image, contextual metadata/description text, or a combination of image and retrieved text. The code is organized for lightweight reproduction without committing datasets, model weights, generated outputs, or private paper metadata.
 
-## Method Diagram
+<p align="center">
+  <img src="docs/assets/aer-overview.png" alt="Adaptive Evidence Routing overview for cultural heritage VQA" width="900"/>
+</p>
 
-`docs/assets/aer_overview.png` is coming soon. The intended diagram will show the question, image, metadata/description, template-aware router, TF-IDF evidence retrieval, VLM fallback, and short-answer normalization stages.
+<p align="center">
+  <em>Adaptive Evidence Routing routes each cultural heritage VQA question to the evidence source it actually needs: visual, contextual, or mixed.</em>
+</p>
 
-## Key Idea
+## Why This Matters
 
-Cultural heritage VQA is heterogeneous. Some questions are visual, such as color, shape, or visible objects. Some are contextual, such as author, period, owner, or location. Others need both the image and text evidence, such as inscriptions or depicted elements. AER routes each question to the evidence source it needs instead of sending every sample through one fixed multimodal prompt.
+Cultural heritage VQA is heterogeneous. Some questions are visual, such as color, shape, or visible objects. Some are contextual, such as author, period, owner, or location. Others need both the image and text evidence, such as inscriptions or depicted elements. AER treats cultural heritage VQA as an evidence-selection problem: route each question to the evidence source it needs instead of sending every sample through one fixed multimodal prompt.
 
-## Features
+## Key Features
 
 - VISCOUNTH English subset preparation and eval-subset utilities
 - TF-IDF sentence retrieval over cultural-property descriptions
@@ -26,6 +30,17 @@ Cultural heritage VQA is heterogeneous. Some questions are visual, such as color
 - Ablation scripts for extraction, normalization, routing, and policy choices
 - Sample-size robustness evaluation and plotting utilities
 - Optional VLM wrappers for InternVL, MiniCPM, and Qwen backbones
+
+## Method Overview
+
+<p align="center">
+  <img src="docs/assets/aer-pipeline.png" alt="AER-TextFirst inference pipeline" width="900"/>
+</p>
+
+1. **Retrieve focused textual evidence** using top-k sentence retrieval from the metadata or description.
+2. **Apply template-aware answer extraction** to recover concise answers when metadata directly contains the answer.
+3. **Use policy-guided VLM fallback** only when extraction is insufficient, choosing text-only, image-only, or image+text evidence.
+4. **Normalize the final answer** into a short-answer format for evaluation.
 
 ## Repository Structure
 
@@ -39,6 +54,9 @@ Cultural heritage VQA is heterogeneous. Some questions are visual, such as color
 ├── data/
 │   └── README.md
 ├── docs/
+│   ├── assets/
+│   │   ├── aer-overview.png
+│   │   └── aer-pipeline.png
 │   ├── LICENSE_NOTE.md
 │   ├── dataset_setup.md
 │   ├── experiment_guide.md
@@ -181,9 +199,6 @@ We report paper-level draft experiments on the English-only VISCOUNTH evaluation
 | Adaptive Evidence Routing | 38.26 | 51.34 |
 | **AER-TextFirst** | **44.97** | **53.69** |
 
-Brief interpretation:
-AER-TextFirst gives the strongest overall performance. The text-only baseline is much stronger than the image-only baseline, showing that cultural heritage VQA often depends heavily on metadata and descriptions. However, naive image+full-description prompting performs poorly, showing that simply adding more context can distract the model. AER improves performance by routing each question to the evidence source it actually needs.
-
 ### Performance by question type
 
 | Method | Visual EM ↑ | Contextual EM ↑ | Mixed EM ↑ |
@@ -193,9 +208,6 @@ AER-TextFirst gives the strongest overall performance. The text-only baseline is
 | Naive multimodal | 23.0 | 6.1 | 10.1 |
 | AER | 50.0 | 34.3 | 30.3 |
 | **AER-TextFirst** | **54.0** | **41.4** | **39.4** |
-
-Brief interpretation:
-The largest improvement appears on mixed questions, where AER-TextFirst reaches 39.4% EM compared with 10.1% for naive multimodal prompting. This supports the central hypothesis that cultural heritage questions require question-conditioned evidence selection rather than a fixed evidence strategy.
 
 ### Ablation study
 
@@ -210,37 +222,15 @@ The largest improvement appears on mixed questions, where AER-TextFirst reaches 
 | full-description-only extraction | 44.30 | 53.36 |
 | w/o SHAPE image-only override | 43.62 | 51.68 |
 
-Brief interpretation:
-The template-aware extractor is the most important component. Removing it drops EM from 44.97% to 38.93%. The text-first design is also important: a route-based fallback policy performs much worse, suggesting that answer extraction should be attempted before expensive or noisy VLM inference.
+Paper-reported draft results suggest:
 
-### Template-wise gains
+- AER-TextFirst performs best overall.
+- Text-only is much stronger than image-only, showing the importance of metadata in cultural heritage VQA.
+- Naive image+full-description prompting performs poorly, showing that adding more context can distract the model.
+- The strongest gains appear on mixed questions, supporting question-conditioned evidence routing.
+- The extractor is an important component, since removing it drops EM from 44.97 to 38.93.
 
-| Template | Naive Multimodal EM ↑ | Routed + Retrieval EM ↑ |
-|---|---:|---:|
-| AFFIXEDAUTHOR | 25.0 | 100.0 |
-| AUTHOR | 25.0 | 75.0 |
-| DATING | 25.0 | 75.0 |
-| AFFIXEDLANGUAGE | 37.5 | 75.0 |
-| AFFIXEDTRANSCRIPT | 12.5 | 75.0 |
-| AFFIXEDELEMENT | 0.0 | 62.5 |
-| AFFIXEDTECHNIQUE | 0.0 | 62.5 |
-| SUBJECT | 14.3 | 57.1 |
-
-Brief interpretation:
-AER is especially effective for structured metadata-heavy templates such as author, language, transcript, dating, and technique questions. These gains come mainly from retrieving focused textual evidence and applying template-aware answer extraction.
-
-### Key takeaway
-
-The results show that cultural heritage VQA is not only a multimodal reasoning problem, but also an evidence-selection problem. A fixed image-only, text-only, or naive multimodal strategy is suboptimal because different questions require different evidence sources. AER-TextFirst improves robustness by combining targeted text retrieval, template-aware extraction, policy-guided VLM fallback, and answer normalization.
-
-> These numbers are from draft paper experiments and should be reproduced locally before being treated as final benchmark results.
-
-## Method Overview
-
-1. Retrieve top-k text evidence from the cultural-property description with TF-IDF sentence retrieval.
-2. Apply template-aware extraction for question types that can be answered from structured text evidence.
-3. Fall back to a policy-guided VLM mode: image-only, text-only, or image plus retrieved text.
-4. Normalize the short answer for fairer exact-match and contains-match evaluation.
+> These numbers are from draft paper experiments on a 298-sample English-only VISCOUNTH evaluation subset and should be reproduced locally before being treated as final benchmark results.
 
 ## Reproducibility Notes
 
